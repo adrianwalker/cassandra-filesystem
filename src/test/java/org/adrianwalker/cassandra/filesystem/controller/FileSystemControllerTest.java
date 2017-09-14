@@ -24,6 +24,8 @@ import java.util.List;
 
 public final class FileSystemControllerTest {
 
+  private static final long TIMEOUT = 30_000L;
+
   private static final String HOST = "127.0.0.1";
   private static final int PORT = 9142;
   private static final String KEYSPACE = "filesystem";
@@ -53,7 +55,7 @@ public final class FileSystemControllerTest {
   @BeforeClass
   public static void beforeClass() throws Exception {
 
-    EmbeddedCassandraServerHelper.startEmbeddedCassandra();
+    EmbeddedCassandraServerHelper.startEmbeddedCassandra(TIMEOUT);
 
     Cluster cluster = new Cluster.Builder()
             .addContactPoints(HOST)
