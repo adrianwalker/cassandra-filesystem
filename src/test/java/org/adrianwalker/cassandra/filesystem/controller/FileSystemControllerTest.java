@@ -87,9 +87,9 @@ public final class FileSystemControllerTest {
     File file = newFile(FILENAME);
 
     FileSystemController controller = new FileSystemController(session);
-    file = controller.saveFile(PATH, file);
+    boolean saved = controller.saveFile(PATH, file);
 
-    assertNotNull(file);
+    assertTrue(saved);
     assertNotNull(file.getId());
     assertTrue(file.getModified() > 0);
     assertTrue(file.getModified() < System.currentTimeMillis());
@@ -183,7 +183,8 @@ public final class FileSystemControllerTest {
     controller.saveFile(PATH, file);
 
     String toPath = "/todir/" + FILENAME;
-    controller.moveFile(PATH, toPath);
+    boolean moved = controller.moveFile(PATH, toPath);
+    assertTrue(moved);
 
     file = controller.getFile(PATH);
     assertNull(file);
@@ -242,6 +243,7 @@ public final class FileSystemControllerTest {
     file.setOwner(OWNER);
     file.setGroup(GROUP);
     file.setHidden(NOT_HIDDEN);
+    file.setModified(System.currentTimeMillis());
 
     return file;
   }

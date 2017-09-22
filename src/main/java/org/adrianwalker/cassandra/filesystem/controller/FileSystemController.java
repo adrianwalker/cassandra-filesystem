@@ -95,7 +95,7 @@ public final class FileSystemController {
     return fileMapper.get(filePath.getFileId());
   }
 
-  public File saveFile(final String path, final File file) {
+  public boolean saveFile(final String path, final File file) {
 
     LOGGER.debug("path = {}, file = {}", path, file);
 
@@ -113,11 +113,9 @@ public final class FileSystemController {
 
     pathMapper.save(new Path(path, file.getId()));
     parentPathMapper.save(new ParentPath(getParent(path), file.getId()));
-
-    file.setModified(System.currentTimeMillis());
     fileMapper.save(file);
 
-    return file;
+    return true;
   }
 
   public boolean deleteFile(final String path) {
@@ -166,7 +164,7 @@ public final class FileSystemController {
     return files;
   }
 
-  public void moveFile(final String fromPath, final String toPath) {
+  public boolean moveFile(final String fromPath, final String toPath) {
 
     LOGGER.debug("fromPath = {}, toPath = {}", fromPath, toPath);
 
@@ -181,7 +179,7 @@ public final class FileSystemController {
     File file = getFile(fromPath);
 
     if (null == file) {
-      return;
+      return false;
     }
 
     String toParentPath = getParent(toPath);
@@ -199,8 +197,9 @@ public final class FileSystemController {
     }
 
     file.setName(getFileName(toPath));
-    file.setModified(System.currentTimeMillis());
     fileMapper.save(file);
+
+    return true;
   }
 
   public OutputStream createOutputStream(final File file) {
@@ -248,7 +247,6 @@ public final class FileSystemController {
         }
 
         file.setSize(bytesWritten);
-        file.setModified(System.currentTimeMillis());
         fileMapper.save(file);
       }
 
